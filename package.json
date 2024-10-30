@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Minha primeira API",
+  "main": "codigo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rafaelalves95/backend.git"
+  },
+  "author": "Rafael Souza",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rafaelalves95/backend/issues"
+  },
+  "homepage": "https://github.com/Rafaelalves95/backend#readme"
+}
