@@ -46,6 +46,6 @@ app.delete('/projects/:id', function(request,response){
     ])
 })
 // iniciando o servidor na porta 5000 
-app.listen(9093, () => {
+app.listen(5000, () => {
     console.log('servidor iniciado na porta 5000')
 })
