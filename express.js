@@ -1,37 +1,56 @@
-// Importando o Express
-const express = require('express')
-//Criando uma instância do aplicativo express,
+// importando o express 
+const express =require('express')
+
+// importando o método 'uuidv4' da biblioteca 'uuid', para gerar um identificador para a app
+const {v4:uuidv4 } = require('uuid')
+// criando uma instância do aplicativo express
 const app = express()
 
-// Definindo uma rota para endpoint raiz ('/')
-// Quando uma solicitação GET é feita para '/', essa função é executada
-app.get('/', function(request, response){
-    // retorna uma resposta no formato JSON com uma mensagem de boas vindas
-    return response.json({
-        message: 'Olá turma 5938!'
-    })
-})
-// Definindo uma rota para o endpoint 'projects' 
+// configurando o servidor para aceitar requisições com dados JSON no corpo
+app.use(express.json())
+// Array onde armazenaremos temporariamente os projetos criados
+const projects = ['Olá']
+// Middleware que registra as rotas e métodos das requisições no console 
+
+function logRoutes(request,response, next){
+    // extraindo o método e a URL da requisição
+    const {method, url} = request 
+    // formatando uma string com o método e a URL
+    const route = `[${method.toUpperCase()}] ${url}`
+    // exibindo a string no console
+    console.log(route)
+    // executando o próximo middleware ou rota
+    return next()
+}
+
+// Habilitando o uso do middleware de log de rotas em todas as requisições 
+
+
+// definindo uma rota para o endpoint 'projects'
 // quando uma solicitação GET é feita '/projects', a função a seguir é executada
 app.get('/projects', function(request,response){
-    return response.json([
-        'Projeto 1',
-        'Projeto 2'
-    ])
+    return response.json(projects)
 }) 
 // definindo uma rota para criar um novo projeto
-// quando uma solicitação do tipo POST é feita para '/projects'
-app.post('/projects', function(request,response){
+// quando uma solicitação do tipo POST é feita para '/projects'.
+app.post('/projects',logRoutes, function(request, response){
     // retornar uma resposta com uma lista de projetos, incluindo o novo projeto
-    return response.json([
-        'Projeto 1',
-        'Projeto 2',
-        'Projeto 3'
-    ])
+    const{name, responsável } = request.body
+    // Criando um novo projeto com ID único, com nome e o responsável
+    const project = {
+        id: uuidv4(),
+        nome,
+        responsável
+    }
+    // Adcionando o novo projeto ao array de projetos
+    projects.push(project)
+    // Retorna o projeto criado com status 201 (criado)
+    return response.status(201).json(project) 
+    
 })
-//  definindo uma rota para atualizar um projeto específico
+// // definindo uma rota para atualizar um projeto específico 
 // o ':id' é um parâmetro de rota
-app.put('/projects/:id', function(request,response){
+app.put('/projects/:id', function(request, response){
     // retorna uma resposta JSON com a lista de projetos atualizada
     return response.json([
         'Projeto 4',
@@ -40,14 +59,14 @@ app.put('/projects/:id', function(request,response){
     ])
 })
 // definindo uma rota para deletar um projeto específico
-app.delete('/projects/:id', function(request,response){
+app.delete('/projects/:id', function(request, response){
     // retorna uma resposta com a lista de projetos após a exclusão de um deles
     return response.json([
         'Projeto 2',
-        'Projeto 3',
+        'Projeto 3'
     ])
 })
 // iniciando o servidor na porta 9093 (para orientar no terminal que o servidor foi iniciado, vamos colocar uma mensagem)
 app.listen(9093, () => {
-    console.log('servidor iniciado na porta 9093 🏆')
+    console.log('Servidor iniciado na porta 9093 🏆')
 })
