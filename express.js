@@ -9,7 +9,7 @@ const app = express()
 // configurando o servidor para aceitar requisições com dados JSON no corpo
 app.use(express.json())
 // Array onde armazenaremos temporariamente os projetos criados
-const projects = ['Olá']
+const projects = ['pc funcionem']
 // Middleware que registra as rotas e métodos das requisições no console 
 
 function logRoutes(request,response, next){
@@ -33,31 +33,47 @@ app.get('/projects', function(request,response){
 }) 
 // definindo uma rota para criar um novo projeto
 // quando uma solicitação do tipo POST é feita para '/projects'.
-app.post('/projects',logRoutes, function(request, response){
-    // retornar uma resposta com uma lista de projetos, incluindo o novo projeto
-    const{name, responsável } = request.body
-    // Criando um novo projeto com ID único, com nome e o responsável
-    const project = {
-        id: uuidv4(),
-        nome,
-        responsável
-    }
-    // Adcionando o novo projeto ao array de projetos
-    projects.push(project)
-    // Retorna o projeto criado com status 201 (criado)
-    return response.status(201).json(project) 
+app.post('/projects', function(request, response){
+    const{nome, responsável} = request.body
+// Extraindo ou colocando um nome no projeto e um responsável no corpo da requisição
+const project ={
+    id: uuidv4(),
+    nome,
+    responsável
+} 
+// Adicionando o novo projeto na array de projetos
+projects.push(project)
+// Retornando o projeto criado com status 201 (criado com sucesso)
+return response.status(201).json(project)
     
+
 })
 // // definindo uma rota para atualizar um projeto específico 
 // o ':id' é um parâmetro de rota
 app.put('/projects/:id', function(request, response){
-    // retorna uma resposta JSON com a lista de projetos atualizada
-    return response.json([
-        'Projeto 4',
-        'Projeto 2',
-        'Projeto 3'
-    ])
+    //Extraindo o 'id' dos parâmetros da URL
+    const[id] = request.params
+    // Extrai 'nome' e 'responsável' do corpo da requisição
+    const {nome, responsável} = request.body
+
+    // Encontrando o índice do projeto no array que tem id igual ao passado
+    const projectIndex = projects.findIndex (p => p.id === id)
 })
+// Verificando se o projeto existe. Se não, retorna um erro 404
+if(projectIndex < 0){
+    return express.response.status(404).json({error: "Projeto não encontrado!"})
+}
+// Verificando se 'nome' e 'responsável' foram informados. Se não, retorna o erro 400
+if(!nome || !responsável){
+    return express.response.status(400).json({ error: "Nome e responsável precisam ser fornecidos"})
+}
+// Criando o novo objeto do projeto com os dados atualizados :)
+const project = {
+    id,
+    nome,
+    responsável
+}
+
 // definindo uma rota para deletar um projeto específico
 app.delete('/projects/:id', function(request, response){
     // retorna uma resposta com a lista de projetos após a exclusão de um deles
