@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/Rafaelalves95/backend#readme",
   "dependencies": {
+    "body-parser": "^1.20.3",
     "express": "^4.21.1",
+    "mysql": "^2.18.1",
     "uuid": "^11.0.2"
   },
   "devDependencies": {
